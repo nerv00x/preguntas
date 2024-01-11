@@ -1,7 +1,9 @@
 import { useState } from "react"
+import Swal from "sweetalert2"
 
-    const formularioPreguntas = ()=> {
-        const[pregunta,setPregunta] = useState({
+export default function  FormularioPregunta({aniadePregunta}) {
+    
+        const  [pregunta, setPregunta] = useState({
             enunciado: "enunciado",
             respuesta1:"respuesta1",
             respuesta2:"respuesta2",
@@ -11,22 +13,34 @@ import { useState } from "react"
             favorita: false
         })
 
-    }
 
-    const handleChange = (e) => {
-        let nuevoValor = (e.target.type === "checkbox")  ? e.target.checked : e.target.value;
+        const handleChange = (e) => {
+            let nuevoValor = (e.target.type === "checkbox")  ? e.target.checked : e.target.value;
+            if (e.target.type === "radio")  nuevoValor = parseInt(e.target.id[e.target.id.length-1]);
+            setPregunta({
+                ...pregunta,
+                [e.target.name]: nuevoValor
+            })
+        }
 
 
-        if (e.target.type === "radio")  nuevoValor = parseInt(e.target.id[e.target.id.length-1]);
+    const handleSubmit = (e) =>{
+        e.preventDefault();
 
+        //validaciones
 
-        setPregunta({
-            ...pregunta,
-            [e.target.name]: nuevoValor
+        aniadePregunta({
+            ...pregunta
+        });
+
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title:"Pregunta añadida correctamente",
+            showConfirmButton: false,
+            timer: 1200
         })
     }
-
-
 
     return (
         //En cada elemento usamos el spreed operator ... para crear una copia del estado y modificar
@@ -104,4 +118,5 @@ import { useState } from "react"
             </button>
         </form>
     )
+}
 
